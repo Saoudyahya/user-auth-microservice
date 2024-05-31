@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  user-auth-service:
+    image: user-auth-microservice:latest
+    build: .
+    container_name: user-auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb://mongo:27017/user_management
+      - JWT_SECRET=mysecretkey  # You might want to use a more secure secret in production
+      - EUREKA_HOST=eureka
+      - EUREKA_PORT=8761
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
